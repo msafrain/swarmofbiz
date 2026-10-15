@@ -10,3 +10,13 @@
 .sidebar a{font-size:14px;line-height:1.35;padding:3px 0}
 footer,footer a{font-size:13px}
 @media(max-width:720px){.brand-line{font-size:clamp(48px,10vw,62px)}.sidebar a{font-size:14px}}
+
+/* v9: full brand name in small type below the unchanged SoB logo */
+.brand-fullname{display:block;font-size:12px;font-weight:400;letter-spacing:.08em;line-height:1.2;margin-top:0}
+
+/* v10: one-line wordmark, original-sized S O B initials */
+.brand-line{display:inline-flex;align-items:baseline;white-space:nowrap;letter-spacing:-.03em}
+.brand-initial{font-size:1em;font-weight:700}
+.brand-small{font-size:.24em;font-weight:400;letter-spacing:0;vertical-align:baseline}
+.brand-line .bee-face{align-self:center;flex:none;margin-left:.10em}
+@media(max-width:420px){.brand-line{font-size:clamp(38px,10vw,48px)}}
