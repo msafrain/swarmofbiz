@@ -33,7 +33,6 @@ async function loadEntries(category){
   }
   return all;
 }
-function postLink(entry){return entry.link?.find(l=>l.rel==='alternate'&&l.type==='text/html')?.href||BLOG}
 function imageFromPost(entry){
   // Prefer the first full-size image in the post; Blogger thumbnails can be small.
   const html=entry.content?.$t||entry.summary?.$t||'';
@@ -46,13 +45,19 @@ function render(entries){
   cardsEl.replaceChildren();let count=0;
   for(const entry of entries){
     const src=imageFromPost(entry);if(!src)continue;
-    const a=document.createElement('a');a.className='card';a.href=postLink(entry);a.target='_blank';a.rel='noopener noreferrer';
-    a.setAttribute('aria-label',entry.title?.$t||'View business card');
+    const button=document.createElement('button');button.type='button';button.className='card';
+    button.setAttribute('aria-label','Enlarge '+(entry.title?.$t||'business card'));
     const img=document.createElement('img');img.src=src;img.alt=entry.title?.$t||'Business card';img.loading=count<2?'eager':'lazy';
-    a.append(img);cardsEl.append(a);count++;
+    button.append(img);button.addEventListener('click',()=>openLightbox(src,img.alt));cardsEl.append(button);count++;
   }
   showStatus(count?'': 'No business cards published yet.');
 }
-function renderNav(selected){for(const cat of CATEGORIES){const a=document.createElement('a');a.textContent=cat;a.href='?category='+encodeURIComponent(cat);if(cat===selected){a.className='active';a.setAttribute('aria-current','page')}navEl.append(a)}}
-async function init(){const category=categoryFromUrl();renderNav(category);titleEl.textContent=category?category.toUpperCase():'RECENT CARDS';document.title=(category?category+' — ':'')+'Swarm of Biz';try{const entries=await loadEntries(category);render(entries)}catch(e){console.error(e);showStatus('Unable to load cards. Check that the Blogger site and its feed are public.')}}
+const lightbox=document.getElementById('lightbox');
+const lightboxImage=document.getElementById('lightbox-image');
+function openLightbox(src,alt){lightboxImage.src=src;lightboxImage.alt=alt;lightbox.showModal()}
+document.getElementById('close-lightbox').addEventListener('click',()=>lightbox.close());
+lightbox.addEventListener('click',event=>{if(event.target===lightbox)lightbox.close()});
+lightbox.addEventListener('close',()=>{lightboxImage.removeAttribute('src')});
+function renderNav(selected){const recent=document.createElement('a');recent.textContent='Recent';recent.href='./';if(!selected){recent.className='active';recent.setAttribute('aria-current','page')}navEl.append(recent);for(const cat of CATEGORIES){const a=document.createElement('a');a.textContent=cat;a.href='?category='+encodeURIComponent(cat);if(cat===selected){a.className='active';a.setAttribute('aria-current','page')}navEl.append(a)}}
+async function init(){const category=categoryFromUrl();renderNav(category);titleEl.textContent=category||'Recent';document.title=(category?category+' — ':'')+'Swarm of Biz';try{const entries=await loadEntries(category);render(entries)}catch(e){console.error(e);showStatus('Unable to load cards. Check that the Blogger site and its feed are public.')}}
 init();

@@ -1,22 +1,15 @@
 # Swarm of Biz
 
-A GitHub Pages website that displays business-card images from public Blogger posts at https://swarmofbiz.blogspot.com/.
+Static GitHub Pages frontend reading business cards from public Blogger posts at https://swarmofbiz.blogspot.com.
 
-## Publishing
+## Install
 
-1. Create a Blogger post with the business name as its title.
-2. Insert the business-card image as the **first image** in the post.
-3. Apply exactly one of the 15 service labels shown on the website (e.g. `Transportation`).
-4. Publish. The site reads the public Blogger feed when visitors load it; no GitHub update is required.
+Upload `index.html`, `style.css`, and `script.js` to the **root** of the `main` branch of https://github.com/msafrain/swarmofbiz. Ensure none of the filenames end in `.txt`. Keep the existing `CNAME` file containing `swarmofbiz.com`.
 
-## GitHub Pages
+## Publish cards
 
-Upload `index.html`, `style.css`, and `script.js` to the root of your public `msafrain/swarmofbiz` repository. In Settings → Pages, choose **Deploy from a branch**, `main`, `/ (root)`.
+Create a public Blogger post containing a business-card image and assign one of the 15 service labels, spelled as displayed in the sidebar. The homepage shows the latest six posts; service pages load all posts in batches. Clicking a card enlarges it in an overlay instead of navigating to Blogger.
 
 ## Notes
 
-- Homepage fetches the six newest posts. Categories paginate through all matching posts (up to a generous safety limit).
-- Cards link to their original Blogger post for now; custom card detail pages can be added later.
-- The bee is a temporary emoji placeholder, not the final crying-bee illustration.
-- Blogger public feed access and image delivery must be enabled. Some Blogger feed or template configurations may require adjustments.
-- GitHub Pages usage terms should be checked before using it for a commercial directory.
+The bee is currently an emoji placeholder, not a custom crying-bee illustration. Blogger feeds must be public. Images shown depend on the source resolution uploaded to Blogger.
