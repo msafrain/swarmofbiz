@@ -3,3 +3,10 @@
 /* Borderless editorial layout and subtle link affordance */
 .layout,.sidebar{border:0!important}
 .submit a:hover,footer a:hover,.sidebar a:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* SoB v6: larger masthead, compact service navigation, matching footer */
+.brand-line{font-size:clamp(52px,6.5vw,72px)}
+.bee-face{width:1em;height:.86em;vertical-align:-.06em}
+.sidebar a{font-size:14px;line-height:1.35;padding:3px 0}
+footer,footer a{font-size:13px}
+@media(max-width:720px){.brand-line{font-size:clamp(48px,10vw,62px)}.sidebar a{font-size:14px}}
