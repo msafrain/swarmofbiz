@@ -1,7 +1,7 @@
 'use strict';
 // Blogger serves public feeds as JSONP. This avoids exposing API credentials.
 const BLOG = 'https://swarmofbiz.blogspot.com';
-const CATEGORIES = ['Automotive','Beauty & Wellness','Business Services','Design','Education','Events','Finance','Home','Logistics','Marketing','Pet Services','Photography','Property','Technology','Transportation','Videography'];
+const CATEGORIES = ['Automotive','Beauty & Wellness','Business Services','Crafts','Design','Education','Events','Finance','Food','Home','Logistics','Marketing','Pet Services','Photography','Property','Technology','Transportation','Videography'];
 const BATCH = 150;
 const cardsEl = document.getElementById('cards');
 const statusEl = document.getElementById('status');
