@@ -33,13 +33,21 @@ async function loadEntries(category){
   }
   return all;
 }
+function fullSize(url){
+  if(!url)return null;
+  // Blogger's image links often point to small thumbnails; request original size.
+  return url.replace(/\/(?:s\d+(?:-[a-z0-9]+)?|w\d+(?:-h\d+)?(?:-[a-z0-9]+)?)\//i,'/s0/');
+}
 function imageFromPost(entry){
-  // Prefer the first full-size image in the post; Blogger thumbnails can be small.
   const html=entry.content?.$t||entry.summary?.$t||'';
   const doc=new DOMParser().parseFromString(html,'text/html');
   const img=doc.querySelector('img');
-  if(img){const href=img.closest('a')?.href;return href&&/^https?:\/\//.test(href)?href:img.getAttribute('src')}
-  return entry.media$thumbnail?.url?.replace(/\/s\d+(?:-c)?\//,'/s1200/')||null;
+  if(img){
+    const linked=img.closest('a')?.href;
+    const original=linked && /\.(png|jpe?g|webp|gif)(?:[?#]|$)|googleusercontent|blogspot/i.test(linked)?linked:null;
+    return fullSize(original||img.getAttribute('src'));
+  }
+  return fullSize(entry.media$thumbnail?.url)||null;
 }
 function render(entries){
   cardsEl.replaceChildren();let count=0;
