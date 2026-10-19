@@ -52,14 +52,21 @@ function imageFromPost(entry){
   }
   return fullSize(entry.media$thumbnail?.url)||null;
 }
+function businessNameFromPost(entry){
+  const html=entry.content?.$t||entry.summary?.$t||'';
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const alt=doc.querySelector('img')?.getAttribute('alt')?.trim();
+  return alt || entry.title?.$t?.trim() || 'Business card';
+}
 function render(entries){
   cardsEl.replaceChildren();let count=0;
   for(const entry of entries){
     const src=imageFromPost(entry);if(!src)continue;
+    const businessName=businessNameFromPost(entry);
     const button=document.createElement('button');button.type='button';button.className='card';
-    button.setAttribute('aria-label','Enlarge '+(entry.title?.$t||'business card'));
-    const img=document.createElement('img');img.src=src;img.alt=entry.title?.$t||'Business card';img.loading=count<2?'eager':'lazy';
-    button.append(img);button.addEventListener('click',()=>{trackEvent('business_card_click',{business_name:img.alt,category:categoryFromUrl()||'Recent'});openLightbox(src,img.alt)});cardsEl.append(button);count++;
+    button.setAttribute('aria-label','Enlarge '+businessName);
+    const img=document.createElement('img');img.src=src;img.alt=businessName;img.loading=count<2?'eager':'lazy';
+    button.append(img);button.addEventListener('click',()=>{trackEvent('business_card_click',{business_name:businessName,category:categoryFromUrl()||'Recent'});openLightbox(src,img.alt)});cardsEl.append(button);count++;
   }
   showStatus(count?'': 'No business cards published yet.');
 }
@@ -70,7 +77,7 @@ document.getElementById('close-lightbox').addEventListener('click',()=>lightbox.
 lightbox.addEventListener('click',event=>{if(event.target===lightbox)lightbox.close()});
 lightbox.addEventListener('close',()=>{lightboxImage.removeAttribute('src')});
 function renderNav(selected){const recent=document.createElement('a');recent.textContent='Recent';recent.href='./';if(!selected){recent.className='active';recent.setAttribute('aria-current','page')}recent.addEventListener('click',()=>trackEvent('category_click',{category_name:'Recent'}));navEl.append(recent);for(const cat of CATEGORIES){const a=document.createElement('a');a.textContent=cat;a.href='?category='+encodeURIComponent(cat);if(cat===selected){a.className='active';a.setAttribute('aria-current','page')}a.addEventListener('click',()=>trackEvent('category_click',{category_name:cat}));navEl.append(a)}}
-async function init(){const category=categoryFromUrl();renderNav(category);titleEl.textContent=category||'Recent';document.title=(category?category+' — ':'')+'Swarm of Biz';try{const entries=await loadEntries(category);render(entries)}catch(e){console.error(e);showStatus('Unable to load cards. Check that the Blogger site and its feed are public.')}}
+async function init(){const category=categoryFromUrl();renderNav(category);titleEl.textContent=category||'Recent';document.title=(category?category+' — ':'')+'Swarm Of Biz';try{const entries=await loadEntries(category);render(entries)}catch(e){console.error(e);showStatus('Unable to load cards. Check that the Blogger site and its feed are public.')}}
 document.querySelector('.submit a')?.addEventListener('click',()=>trackEvent('submit_card_click'));
 document.querySelector('footer a')?.addEventListener('click',()=>trackEvent('contact_click'));
 init();
